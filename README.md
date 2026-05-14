@@ -1,0 +1,29 @@
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  karolayne@github  ~  [session: active]                             │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  $ whoami                                                           │
+│  ┌──────────────────────────────────────────────────────────────┐   │
+│  │  Karolayne Amábile · DevOps Engineer Jr · Anápolis, GO. BR   │   │
+│  │  BSc Computer Science — IFG · 5th semester · IRA 8.0         │   │
+│  │  AWS Cloud Practitioner Certified                            │   │
+│  └──────────────────────────────────────────────────────────────┘   │
+│                                                                     │
+│  $ cat stack.conf                                                   │
+│                                                                     │
+│  [cloud & iac]         AWS · Terraform/OpenTOFU · Terragrunt        │
+│  [kubernetes]          EKS · k0s · Helm · ArgoCD · Cilium           │
+│  [ci/cd]               GitHub Actions · ArgoCD                      │
+│  [observability]       Grafana · Prometheus · Loki · Alloy          │
+│  [storage]             Longhorn · Rook-Ceph · Velero                │
+│  [secrets]             Vault · External Secrets Operator            │
+│  [languages]           C · Rust · Python · YAML                     │
+│                                                                     │
+│  $ cat hobbies.txt                                                  │
+│                                                                     │
+│  games · anime · café hopping · gardening · learning new things     |
+│                                                                     │   ╱\_
+│  $ _                                                                │  (` - 7
+│                                                                     │  |、⁻ 〵
+└─────────────────────────────────────────────────────────────────────┘  じしˍ,)ノ
