@@ -236,7 +236,7 @@ export default {
         <a href="https://www.credly.com/badges/cf49021b-d946-47a7-8442-c0349f7d8b7e" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge amber">✓ AWS Certified Cloud Practitioner</span></a>
         <span style="color:var(--text-dim); font-size:12px; margin-left:6px;">Amazon Web Services</span>
         <br style="margin:0.3rem 0; display:block;">
-        <a href="https://cert.efset.org/en/FXfQvC" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge cyan">✓ EF SET C2 Proficient · 76/100</span></a>
+        <a href="https://cert.efset.org/en/FXfQvC" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge cyan">✓ EF SET C2 Proficient </span></a>
         <span style="color:var(--text-dim); font-size:12px; margin-left:6px;">EF SET English Certificate</span>
       </div>
     </div>
