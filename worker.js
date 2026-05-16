@@ -183,8 +183,8 @@ export default {
           <div class="info-line">Karolayne Amábile Brito Borges &nbsp;<span class="badge">DevOps Engineer Jr</span></div>
           <div class="info-line" style="margin-top:0.5rem;"><span class="label">localização</span><span class="value">Anápolis, Goiás · Brasil</span></div>
           <div class="info-line"><span class="label">e-mail</span><span class="value"><a href="mailto:karolayneamabile@gmail.com">karolayneamabile@gmail.com</a></span></div>
-          <div class="info-line"><span class="label">github</span><span class="value"><a href="https://github.com/KarolayneAmabile" target="_blank">github.com/KarolayneAmabile</a></span></div>
-          <div class="info-line"><span class="label">linkedin</span><span class="value"><a href="https://linkedin.com/in/karolayneamabile" target="_blank">linkedin.com/in/karolayneamabile</a></span></div>
+          <div class="info-line"><span class="label">github</span><span class="value"><a href="https://github.com/KarolayneAmabile" target="_blank" rel="noopener noreferrer">github.com/KarolayneAmabile</a></span></div>
+          <div class="info-line"><span class="label">linkedin</span><span class="value"><a href="https://linkedin.com/in/karolayneamabile" target="_blank" rel="noopener noreferrer">linkedin.com/in/karolayneamabile</a></span></div>
           <div style="margin-top:0.75rem; color:#888888; font-size:13px; font-style:italic; line-height:1.5;">
             DevOps Engineer Jr com experiência em infraestrutura cloud-native, Kubernetes, automação e práticas GitOps. AWS Certified Cloud Practitioner. Graduanda em Ciência da Computação pelo IFG — 5º período, IRA 8,0.
           </div>
@@ -205,7 +205,7 @@ export default {
           <span class="stack-key">storage</span><span class="stack-val">Longhorn <span class="dot-sep">·</span> Rook-Ceph <span class="dot-sep">·</span> Velero</span>
           <span class="stack-key">secrets</span><span class="stack-val">Vault <span class="dot-sep">·</span> Vaultwarden <span class="dot-sep">·</span> External Secrets Operator</span>
           <span class="stack-key">linguagens</span><span class="stack-val">Rust <span class="dot-sep">·</span> C <span class="dot-sep">·</span> Python <span class="dot-sep">·</span> YAML</span>
-          <span class="stack-key">idiomas</span><span class="stack-val">Português (nativo) <span class="dot-sep">·</span> Inglês (intermediário)</span>
+          <span class="stack-key">idiomas</span><span class="stack-val">Português (nativo) <span class="dot-sep">·</span> Inglês (C2 proficiente)</span>
         </div>
       </div>
     </div>
@@ -233,8 +233,11 @@ export default {
         <span class="cmd">ls certifications/</span>
       </div>
       <div class="output">
-        <a href="https://www.credly.com/badges/cf49021b-d946-47a7-8442-c0349f7d8b7e" target="_blank" style="text-decoration:none;"><span class="badge amber">✓ AWS Certified Cloud Practitioner</span></a>
+        <a href="https://www.credly.com/badges/cf49021b-d946-47a7-8442-c0349f7d8b7e" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge amber">✓ AWS Certified Cloud Practitioner</span></a>
         <span style="color:var(--text-dim); font-size:12px; margin-left:6px;">Amazon Web Services</span>
+        <br style="margin:0.3rem 0; display:block;">
+        <a href="https://cert.efset.org/en/FXfQvC" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge cyan">✓ EF SET C2 Proficient · 76/100</span></a>
+        <span style="color:var(--text-dim); font-size:12px; margin-left:6px;">EF SET English Certificate</span>
       </div>
     </div>
     <div class="section">
@@ -274,6 +277,10 @@ export default {
       headers: {
         'Content-Type': 'text/html;charset=UTF-8',
         'Cache-Control': 'public, max-age=3600',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Content-Security-Policy': "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'none';",
       },
     });
   },
