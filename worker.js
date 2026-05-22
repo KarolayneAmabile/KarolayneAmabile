@@ -1,14 +1,177 @@
-// worker.js — Karolayne Portfolio
-// Deploy: wrangler deploy
+// worker.js — Karolayne Portfolio (Bilingual: PT / EN)
+// Routes:
+//   /         → redirect to /pt or /en based on Accept-Language
+//   /pt        → Portuguese version
+//   /en        → English version
+//   anything else → redirect to /pt
 
 export default {
   async fetch(request) {
-    const html = `<!DOCTYPE html>
-<html lang="pt-BR">
+    const url = new URL(request.url);
+    const path = url.pathname.replace(/\/$/, '') || '/';
+
+    if (path === '/en') return new Response(buildHTML('en'), htmlHeaders());
+    if (path === '/pt') return new Response(buildHTML('pt'), htmlHeaders());
+
+    // Auto-detect language from Accept-Language header
+    const acceptLang = request.headers.get('Accept-Language') || '';
+    const prefersPT = /\bpt\b/i.test(acceptLang);
+    const lang = prefersPT ? 'pt' : 'en';
+
+    return Response.redirect(`${url.origin}/${lang}`, 302);
+  },
+};
+
+function htmlHeaders() {
+  return {
+    headers: {
+      'Content-Type': 'text/html;charset=UTF-8',
+      'Cache-Control': 'public, max-age=3600',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Content-Security-Policy':
+        "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'none'; script-src 'unsafe-inline';",
+    },
+  };
+}
+
+// ─── Translations ────────────────────────────────────────────────────────────
+
+const t = {
+  pt: {
+    lang: 'pt',
+    altLang: 'en',
+    altLabel: 'EN',
+    altTitle: 'Switch to English',
+    title: 'karolayne@Karol: ~',
+    // whoami
+    cmd_whoami: 'whoami',
+    location: 'Anápolis, Goiás · Brasil',
+    email_label: 'e-mail',
+    github_label: 'github',
+    linkedin_label: 'linkedin',
+    location_label: 'localização',
+    bio: 'DevOps Engineer Jr com experiência em infraestrutura cloud-native, Kubernetes, automação e práticas GitOps. AWS Certified Cloud Practitioner. Graduanda em Ciência da Computação pelo IFG — 5º período, IRA 8,0.',
+    // stack
+    cmd_stack: 'cat stack.conf',
+    stack: [
+      ['cloud &amp; iac', 'AWS · Terraform/OpenTOFU · Terragrunt · Helmfile'],
+      ['kubernetes',      'EKS · k8s · Helm · ArgoCD · Cilium · cert-manager'],
+      ['ci/cd',           'GitHub Actions · ArgoCD · ArgoCD Image Updater'],
+      ['observability',   'Grafana · Prometheus · Loki · Alloy'],
+      ['storage',         'Longhorn · Rook-Ceph · Velero'],
+      ['secrets',         'Vault · Vaultwarden · External Secrets Operator'],
+      ['linguagens',      'Rust · C · Python · YAML'],
+      ['idiomas',         'Português (nativo) · Inglês (C2 proficiente)'],
+    ],
+    // experience
+    cmd_exp: 'cat experience.log',
+    job_title: 'DevOps Engineer Jr',
+    job_company: 'Soliton',
+    job_type: 'Remoto',
+    job_period: 'Abril 2025 — Maio 2026',
+    bullets: [
+      'Reduzi o tempo de deploy da plataforma OpenEDX em 5× substituindo a camada de abstração do Tutor por uma pipeline customizada com GitHub Actions, ArgoCD e ArgoCD Image Updater.',
+      'Projetei e administrei clusters Kubernetes multi-purpose com isolamento por ambiente (segurança, monitoramento, operações e produção).',
+      'Desenvolvi módulos Terraform/OpenTOFU e Helm Charts para padronização de infraestrutura, garantindo padrão GitOps e consistência entre deploys.',
+      'Implementei stack de observabilidade com Grafana, Prometheus, Loki e Alloy para monitoramento e alertas em ambientes cloud-native.',
+      'Automatizei gerenciamento de secrets com Vault e External Secrets Operator, eliminando credenciais hardcoded nos repositórios.',
+      'Desenvolvi API REST em Rust com arquitetura hexagonal, garantindo baixo acoplamento entre domínio, aplicação e infraestrutura.',
+    ],
+    // certifications
+    cmd_certs: 'ls certifications/',
+    cert_aws_label: '✓ AWS Certified Cloud Practitioner',
+    cert_aws_issuer: 'Amazon Web Services',
+    cert_ef_label: '✓ EF SET C2 Proficient',
+    cert_ef_issuer: 'EF SET English Certificate',
+    // education
+    cmd_edu: 'cat education.txt',
+    edu_degree: 'Bacharelado em Ciência da Computação',
+    edu_meta: 'Instituto Federal de Goiás (IFG) · 2024–2027 · 5º período · IRA 8,0',
+    edu_subjects: 'Arquitetura de Computadores · Sistemas Operacionais · Redes de Computadores · Engenharia de Software · Estrutura de Dados · Bancos de Dados',
+    // hobbies
+    cmd_hobbies: 'cat hobbies.txt',
+    hobbies: 'games · anime · café hopping · gardening · learning new things',
+  },
+
+  en: {
+    lang: 'en',
+    altLang: 'pt',
+    altLabel: 'PT',
+    altTitle: 'Mudar para Português',
+    title: 'karolayne@Karol: ~',
+    // whoami
+    cmd_whoami: 'whoami',
+    location: 'Anápolis, Goiás · Brazil',
+    email_label: 'email',
+    github_label: 'github',
+    linkedin_label: 'linkedin',
+    location_label: 'location',
+    bio: 'Junior DevOps Engineer with hands-on experience in cloud-native infrastructure, Kubernetes, automation, and GitOps practices. AWS Certified Cloud Practitioner. B.Sc. in Computer Science at IFG — 5th semester, GPA 8.0/10.',
+    // stack
+    cmd_stack: 'cat stack.conf',
+    stack: [
+      ['cloud &amp; iac', 'AWS · Terraform/OpenTOFU · Terragrunt · Helmfile'],
+      ['kubernetes',      'EKS · k8s · Helm · ArgoCD · Cilium · cert-manager'],
+      ['ci/cd',           'GitHub Actions · ArgoCD · ArgoCD Image Updater'],
+      ['observability',   'Grafana · Prometheus · Loki · Alloy'],
+      ['storage',         'Longhorn · Rook-Ceph · Velero'],
+      ['secrets',         'Vault · Vaultwarden · External Secrets Operator'],
+      ['languages',       'Rust · C · Python · YAML'],
+      ['spoken langs',    'Portuguese (native) · English (C2 proficient)'],
+    ],
+    // experience
+    cmd_exp: 'cat experience.log',
+    job_title: 'Junior DevOps Engineer',
+    job_company: 'Soliton',
+    job_type: 'Remote',
+    job_period: 'April 2025 — May 2026',
+    bullets: [
+      'Reduced OpenEDX platform deploy time by 5× by replacing the Tutor abstraction layer with a custom pipeline using GitHub Actions, ArgoCD, and ArgoCD Image Updater.',
+      'Designed and managed multi-purpose Kubernetes clusters with environment isolation (security, monitoring, operations, and production).',
+      'Developed Terraform/OpenTOFU modules and Helm Charts to standardize infrastructure, ensuring GitOps compliance and consistency across deployments.',
+      'Implemented an observability stack with Grafana, Prometheus, Loki, and Alloy for monitoring and alerting in cloud-native environments.',
+      'Automated secrets management with Vault and External Secrets Operator, eliminating hardcoded credentials from repositories.',
+      'Built a REST API in Rust using hexagonal architecture, ensuring low coupling between the domain, application, and infrastructure layers.',
+    ],
+    // certifications
+    cmd_certs: 'ls certifications/',
+    cert_aws_label: '✓ AWS Certified Cloud Practitioner',
+    cert_aws_issuer: 'Amazon Web Services',
+    cert_ef_label: '✓ EF SET C2 Proficient',
+    cert_ef_issuer: 'EF SET English Certificate',
+    // education
+    cmd_edu: 'cat education.txt',
+    edu_degree: 'B.Sc. in Computer Science',
+    edu_meta: 'Instituto Federal de Goiás (IFG) · 2024–2027 · 5th semester · GPA 8.0',
+    edu_subjects: 'Computer Architecture · Operating Systems · Computer Networks · Software Engineering · Data Structures · Databases',
+    // hobbies
+    cmd_hobbies: 'cat hobbies.txt',
+    hobbies: 'games · anime · café hopping · gardening · learning new things',
+  },
+};
+
+// ─── HTML Builder ─────────────────────────────────────────────────────────────
+
+function buildHTML(lang) {
+  const l = t[lang];
+  const dot = '<span class="dot-sep">·</span>';
+
+  const stackRows = l.stack.map(([key, val]) => `
+          <span class="stack-key">${key}</span>
+          <span class="stack-val">${val.split(' · ').join(` ${dot} `)}</span>`).join('');
+
+  const bulletItems = l.bullets.map(b => `<div class="bullet">${b}</div>`).join('\n          ');
+
+  return `<!DOCTYPE html>
+<html lang="${lang}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>karolayne@Karol: ~</title>
+<title>${l.title}</title>
+<link rel="alternate" hreflang="${l.lang}" href="/${l.lang}">
+<link rel="alternate" hreflang="${l.altLang}" href="/${l.altLang}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
@@ -74,9 +237,21 @@ export default {
   }
   .win-tab-new:hover { color: var(--text); background: rgba(255,255,255,0.05); }
   .win-spacer { flex: 1; }
-  .win-controls {
-    display: flex; align-items: stretch;
+  .win-controls { display: flex; align-items: stretch; }
+  /* Language switcher */
+  .lang-switch {
+    display: flex; align-items: center;
+    padding: 0 14px;
+    border-right: 1px solid var(--border);
+    color: var(--pink-dim); font-size: 11px; letter-spacing: 0.08em;
+    font-weight: 700; cursor: pointer; text-decoration: none;
+    transition: color 0.15s, background 0.15s;
   }
+  .lang-switch:hover {
+    background: rgba(255,110,180,0.08);
+    color: var(--pink);
+  }
+  .lang-switch::before { content: '⌥ '; opacity: 0.5; margin-right: 3px; }
   .win-btn {
     display: flex; align-items: center; justify-content: center;
     width: 46px; font-size: 12px; color: var(--text-dim); cursor: default;
@@ -125,16 +300,6 @@ export default {
   .dot-sep { color: var(--pink-dim); margin: 0 4px; }
   .hobbies { color: var(--text); font-size: 13px; }
   .hobbies span { color: var(--pink-dim); margin: 0 4px; }
-  .status-dot {
-    display: inline-block; width: 7px; height: 7px; border-radius: 50%;
-    background: var(--pink); margin-right: 6px; vertical-align: middle;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  .status-text { color: var(--pink); font-weight: 500; }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,110,180,0.5); }
-    50% { opacity: 0.8; box-shadow: 0 0 0 5px rgba(255,110,180,0); }
-  }
   .cursor {
     display: inline-block; width: 8px; height: 14px;
     background: var(--pink); vertical-align: text-bottom;
@@ -167,121 +332,109 @@ export default {
     <div class="win-tab-new">+</div>
     <div class="win-spacer"></div>
     <div class="win-controls">
+      <a href="/${l.altLang}" class="lang-switch" title="${l.altTitle}">${l.altLabel}</a>
       <div class="win-btn">&#x2500;</div>
       <div class="win-btn">&#x25A1;</div>
       <div class="win-btn close">&#x2715;</div>
     </div>
   </div>
   <div class="body">
+
+    <!-- whoami -->
     <div class="section">
       <div class="prompt-line">
         <span class="ps1"><span class="user">karolayne</span><span class="sep">@</span><span class="path">Karol</span><span class="sep">:~</span><span class="dollar">$</span></span>
-        <span class="cmd">whoami</span>
+        <span class="cmd">${l.cmd_whoami}</span>
       </div>
       <div class="output">
         <div class="box">
           <div class="info-line">Karolayne Amábile Brito Borges &nbsp;<span class="badge">DevOps Engineer Jr</span></div>
-          <div class="info-line" style="margin-top:0.5rem;"><span class="label">localização</span><span class="value">Anápolis, Goiás · Brasil</span></div>
-          <div class="info-line"><span class="label">e-mail</span><span class="value"><a href="mailto:karolayneamabile@gmail.com">karolayneamabile@gmail.com</a></span></div>
-          <div class="info-line"><span class="label">github</span><span class="value"><a href="https://github.com/KarolayneAmabile" target="_blank" rel="noopener noreferrer">github.com/KarolayneAmabile</a></span></div>
-          <div class="info-line"><span class="label">linkedin</span><span class="value"><a href="https://linkedin.com/in/karolayneamabile" target="_blank" rel="noopener noreferrer">linkedin.com/in/karolayneamabile</a></span></div>
-          <div style="margin-top:0.75rem; color:#888888; font-size:13px; font-style:italic; line-height:1.5;">
-            DevOps Engineer Jr com experiência em infraestrutura cloud-native, Kubernetes, automação e práticas GitOps. AWS Certified Cloud Practitioner. Graduanda em Ciência da Computação pelo IFG — 5º período, IRA 8,0.
-          </div>
+          <div class="info-line" style="margin-top:0.5rem;"><span class="label">${l.location_label}</span><span class="value">${l.location}</span></div>
+          <div class="info-line"><span class="label">${l.email_label}</span><span class="value"><a href="mailto:karolayneamabile@gmail.com">karolayneamabile@gmail.com</a></span></div>
+          <div class="info-line"><span class="label">${l.github_label}</span><span class="value"><a href="https://github.com/KarolayneAmabile" target="_blank" rel="noopener noreferrer">github.com/KarolayneAmabile</a></span></div>
+          <div class="info-line"><span class="label">${l.linkedin_label}</span><span class="value"><a href="https://linkedin.com/in/karolayneamabile" target="_blank" rel="noopener noreferrer">linkedin.com/in/karolayneamabile</a></span></div>
+          <div style="margin-top:0.75rem; color:#888888; font-size:13px; font-style:italic; line-height:1.5;">${l.bio}</div>
         </div>
       </div>
     </div>
+
+    <!-- stack -->
     <div class="section">
       <div class="prompt-line">
         <span class="ps1"><span class="user">karolayne</span><span class="sep">@</span><span class="path">Karol</span><span class="sep">:~</span><span class="dollar">$</span></span>
-        <span class="cmd">cat stack.conf</span>
+        <span class="cmd">${l.cmd_stack}</span>
       </div>
       <div class="output">
-        <div class="stack-grid">
-          <span class="stack-key">cloud &amp; iac</span><span class="stack-val">AWS <span class="dot-sep">·</span> Terraform/OpenTOFU <span class="dot-sep">·</span> Terragrunt <span class="dot-sep">·</span> Helmfile</span>
-          <span class="stack-key">kubernetes</span><span class="stack-val">EKS <span class="dot-sep">·</span> k8s <span class="dot-sep">·</span> Helm <span class="dot-sep">·</span> ArgoCD <span class="dot-sep">·</span> Cilium <span class="dot-sep">·</span> cert-manager</span>
-          <span class="stack-key">ci/cd</span><span class="stack-val">GitHub Actions <span class="dot-sep">·</span> ArgoCD <span class="dot-sep">·</span> ArgoCD Image Updater</span>
-          <span class="stack-key">observability</span><span class="stack-val">Grafana <span class="dot-sep">·</span> Prometheus <span class="dot-sep">·</span> Loki <span class="dot-sep">·</span> Alloy</span>
-          <span class="stack-key">storage</span><span class="stack-val">Longhorn <span class="dot-sep">·</span> Rook-Ceph <span class="dot-sep">·</span> Velero</span>
-          <span class="stack-key">secrets</span><span class="stack-val">Vault <span class="dot-sep">·</span> Vaultwarden <span class="dot-sep">·</span> External Secrets Operator</span>
-          <span class="stack-key">linguagens</span><span class="stack-val">Rust <span class="dot-sep">·</span> C <span class="dot-sep">·</span> Python <span class="dot-sep">·</span> YAML</span>
-          <span class="stack-key">idiomas</span><span class="stack-val">Português (nativo) <span class="dot-sep">·</span> Inglês (C2 proficiente)</span>
-        </div>
+        <div class="stack-grid">${stackRows}</div>
       </div>
     </div>
+
+    <!-- experience -->
     <div class="section">
       <div class="prompt-line">
         <span class="ps1"><span class="user">karolayne</span><span class="sep">@</span><span class="path">Karol</span><span class="sep">:~</span><span class="dollar">$</span></span>
-        <span class="cmd">cat experience.log</span>
+        <span class="cmd">${l.cmd_exp}</span>
       </div>
       <div class="output">
         <div class="job-entry">
-          <div class="job-title">DevOps Engineer Jr &nbsp;<span class="badge">Soliton</span> <span class="badge">Remoto</span></div>
-          <div class="job-meta">Abril 2025 — Maio 2026</div>
-          <div class="bullet">Reduzi o tempo de deploy da plataforma OpenEDX em 5× substituindo a camada de abstração do Tutor por uma pipeline customizada com GitHub Actions, ArgoCD e ArgoCD Image Updater.</div>
-          <div class="bullet">Projetei e administrei clusters Kubernetes multi-purpose com isolamento por ambiente (segurança, monitoramento, operações e produção).</div>
-          <div class="bullet">Desenvolvi módulos Terraform/OpenTOFU e Helm Charts para padronização de infraestrutura, garantindo padrão GitOps e consistência entre deploys.</div>
-          <div class="bullet">Implementei stack de observabilidade com Grafana, Prometheus, Loki e Alloy para monitoramento e alertas em ambientes cloud-native.</div>
-          <div class="bullet">Automatizei gerenciamento de secrets com Vault e External Secrets Operator, eliminando credenciais hardcoded nos repositórios.</div>
-          <div class="bullet">Desenvolvi API REST em Rust com arquitetura hexagonal, garantindo baixo acoplamento entre domínio, aplicação e infraestrutura.</div>
+          <div class="job-title">${l.job_title} &nbsp;<span class="badge">${l.job_company}</span> <span class="badge">${l.job_type}</span></div>
+          <div class="job-meta">${l.job_period}</div>
+          ${bulletItems}
         </div>
       </div>
     </div>
+
+    <!-- certifications -->
     <div class="section">
       <div class="prompt-line">
         <span class="ps1"><span class="user">karolayne</span><span class="sep">@</span><span class="path">Karol</span><span class="sep">:~</span><span class="dollar">$</span></span>
-        <span class="cmd">ls certifications/</span>
+        <span class="cmd">${l.cmd_certs}</span>
       </div>
       <div class="output">
-        <a href="https://www.credly.com/badges/cf49021b-d946-47a7-8442-c0349f7d8b7e" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge amber">✓ AWS Certified Cloud Practitioner</span></a>
-        <span style="color:var(--text-dim); font-size:12px; margin-left:6px;">Amazon Web Services</span>
+        <a href="https://www.credly.com/badges/cf49021b-d946-47a7-8442-c0349f7d8b7e" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge amber">${l.cert_aws_label}</span></a>
+        <span style="color:var(--text-dim); font-size:12px; margin-left:6px;">${l.cert_aws_issuer}</span>
         <br style="margin:0.3rem 0; display:block;">
-        <a href="https://cert.efset.org/en/FXfQvC" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge cyan">✓ EF SET C2 Proficient </span></a>
-        <span style="color:var(--text-dim); font-size:12px; margin-left:6px;">EF SET English Certificate</span>
+        <a href="https://cert.efset.org/en/FXfQvC" target="_blank" rel="noopener noreferrer" style="text-decoration:none;"><span class="badge cyan">${l.cert_ef_label}</span></a>
+        <span style="color:var(--text-dim); font-size:12px; margin-left:6px;">${l.cert_ef_issuer}</span>
       </div>
     </div>
+
+    <!-- education -->
     <div class="section">
       <div class="prompt-line">
         <span class="ps1"><span class="user">karolayne</span><span class="sep">@</span><span class="path">Karol</span><span class="sep">:~</span><span class="dollar">$</span></span>
-        <span class="cmd">cat education.txt</span>
+        <span class="cmd">${l.cmd_edu}</span>
       </div>
       <div class="output">
         <div class="edu-entry">
-          <div class="edu-title">Bacharelado em Ciência da Computação</div>
-          <div class="edu-sub">Instituto Federal de Goiás (IFG) · 2024–2027 · 5º período · IRA 8,0</div>
-          <div style="font-size:12px; color:var(--text-dim);">Arquitetura de Computadores · Sistemas Operacionais · Redes de Computadores · Engenharia de Software · Estrutura de Dados · Bancos de Dados</div>
+          <div class="edu-title">${l.edu_degree}</div>
+          <div class="edu-sub">${l.edu_meta}</div>
+          <div style="font-size:12px; color:var(--text-dim);">${l.edu_subjects}</div>
         </div>
       </div>
     </div>
+
+    <!-- hobbies -->
     <div class="section">
       <div class="prompt-line">
         <span class="ps1"><span class="user">karolayne</span><span class="sep">@</span><span class="path">Karol</span><span class="sep">:~</span><span class="dollar">$</span></span>
-        <span class="cmd">cat hobbies.txt</span>
+        <span class="cmd">${l.cmd_hobbies}</span>
       </div>
       <div class="output">
-        <div class="hobbies">games <span>·</span> anime <span>·</span> café hopping <span>·</span> gardening <span>·</span> learning new things</div>
+        <div class="hobbies">${l.hobbies.split(' · ').join(' <span>·</span> ')}</div>
       </div>
     </div>
+
+    <!-- cursor -->
     <div class="section">
       <div class="prompt-line">
         <span class="ps1"><span class="user">karolayne</span><span class="sep">@</span><span class="path">Karol</span><span class="sep">:~</span><span class="dollar">$</span></span>
         <div class="cursor"></div>
       </div>
     </div>
+
   </div>
 </div>
 </body>
 </html>`;
-
-    return new Response(html, {
-      headers: {
-        'Content-Type': 'text/html;charset=UTF-8',
-        'Cache-Control': 'public, max-age=3600',
-        'X-Content-Type-Options': 'nosniff',
-        'X-Frame-Options': 'DENY',
-        'Referrer-Policy': 'strict-origin-when-cross-origin',
-        'Content-Security-Policy': "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'none';",
-      },
-    });
-  },
-};
+}
