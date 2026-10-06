@@ -3,5 +3,5 @@ main = "worker.js"
 compatibility_date = "2024-01-01"
 
 [[routes]]
-pattern = "karolayne.com"
+pattern = "karolayne.com/*"
 zone_name = "karolayne.com"
